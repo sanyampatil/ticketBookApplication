@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import dbConnect from '@/lib/mongodb'
 import Booking from '@/models/Booking'
 import Route from '@/models/Route'
@@ -50,7 +50,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         return NextResponse.json({ error: 'Already cancelled' }, { status: 400 })
       }
 
-      const seatNums = booking.passengers.map((p) => p.seatNumber)
+      const seatNums = booking.passengers.map((p: { seatNumber: number }) => p.seatNumber)
       await Route.findByIdAndUpdate(booking.route, {
         $pull: { bookedSeats: { $in: seatNums } },
         $inc: { availableSeats: booking.passengers.length },

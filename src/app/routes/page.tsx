@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -9,7 +9,7 @@ import { formatDate } from '@/lib/utils'
 
 const BUS_TYPES = ['All', 'Volvo AC', 'AC Sleeper', 'Non-AC Sleeper', 'AC Seater', 'Non-AC Seater']
 
-export default function RoutesPage() {
+function RoutesContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -174,5 +174,13 @@ export default function RoutesPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function RoutesPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RoutesContent />
+    </Suspense>
   )
 }
